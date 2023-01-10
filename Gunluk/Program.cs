@@ -1,4 +1,4 @@
-global using Gunluk.DATA;
+﻿global using Gunluk.DATA;
 global using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,5 +31,12 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//veritabanı yoksa oluştur.(migrationlar yapılmadıysa yap)
+using(var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetService<UygulamaDbContext>();
+    db?.Database.Migrate();
+}
 
 app.Run();
